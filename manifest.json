@@ -1,0 +1,15 @@
+{
+    "name": "SongTube Link",
+    "version": "1.0.0",
+    "description": "Send video links to SongTube App",
+    "manifest_version": 3,
+    "author": "Artx",
+    "content_security_policy": {
+        "extension_pages": "script-src 'self' ; object-src 'self'"
+    },
+    "permissions": ["activeTab"],
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": "icons/Icon-192.png"
+    }
+}
