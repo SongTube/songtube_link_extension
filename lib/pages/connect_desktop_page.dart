@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:songtube_link_flutter/internal/styles.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class ConnectDesktopPage extends StatefulWidget {
   const ConnectDesktopPage({super.key});
@@ -39,13 +44,32 @@ class _ConnectDesktopPageState extends State<ConnectDesktopPage> {
   }
 
   Widget _downloadButton() {
-    return Container(
-      padding: const EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: appColor
+    return InkWell(
+      onTap: () async {
+        // Get release
+        final release = await http.get(Uri.parse('https://api.github.com/repos/SongTube/songtube_link_server/releases/latest'));
+        final jsonMap = jsonDecode(release.body);
+        final assets = jsonMap['assets'] as List<dynamic>;
+        final windows = assets.firstWhere((element) => element['name'] == 'installer_windows.exe');
+        // final linux = assets.firstWhere((element) => element['name'] == 'linux_snap_bundle.zip');
+        final link = windows['browser_download_url'];
+        launchUrl(Uri.parse(link));
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: appColor,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 8,
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 1
+            )
+          ]
+        ),
+        child: Text('Download', style: textStyle(context, bold: true).copyWith(color: Colors.white)),
       ),
-      child: Text('Download', style: textStyle(context, bold: true).copyWith(color: Colors.white)),
     );
   }
 
