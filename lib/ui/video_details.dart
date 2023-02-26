@@ -108,7 +108,7 @@ class _VideoDetailsState extends State<VideoDetails> {
   }
 
   Widget _noContent() {
-    return Text('No content detected. Go into a\nvideo/playlist and open this extension again', style: textStyle(context, opacity: 0.6), textAlign: TextAlign.center,);
+    return Text('No content detected\nOpen a Video or Playlist and check again', style: textStyle(context, opacity: 0.6, bold: false), textAlign: TextAlign.center,);
   }
 
   Widget _button({required String title, required Function() onTap}) {

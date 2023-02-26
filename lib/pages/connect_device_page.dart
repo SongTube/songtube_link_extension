@@ -69,16 +69,16 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
         // Actions
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _deviceConnectionStatus(),
             const Spacer(),
             if (connectToDeviceRunning)
             const Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 8),
               child: SizedBox(
-                width: 24, height: 24,
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(appColor))),
+                width: 16, height: 16,
+                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(appColor), strokeWidth: 3)),
             ),
             _connectButton()
           ],
@@ -97,21 +97,24 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
   }
 
   Widget _deviceConnectionStatus() {
-    return Row(
-      children: [
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: device != null
-            ? Text('Connected to: ', style: subtitleTextStyle(context).copyWith(color: appColor))
-            : Text('Disconnected', style: subtitleTextStyle(context).copyWith(color: appColor))
-        ),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: device != null
-            ? Text(device!.name, style: subtitleTextStyle(context, opacity: 0.6))
-            : const SizedBox(),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 8),
+      child: Row(
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: device != null
+              ? Text('Connected to: ', style: subtitleTextStyle(context).copyWith(color: appColor))
+              : Text('Disconnected', style: subtitleTextStyle(context).copyWith(color: appColor))
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: device != null
+              ? Text(device!.name, style: subtitleTextStyle(context, opacity: 0.6))
+              : const SizedBox(),
+          )
+        ],
+      ),
     );
   }
 
@@ -146,7 +149,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: device != null
-              ? Text('Disconnect', style: textStyle(context, bold: true).copyWith(color: Colors.black))
+              ? Text('Disconnect', style: textStyle(context, bold: true).copyWith(color: appColor))
               : Text('Search for device', style: textStyle(context, bold: true).copyWith(color: Colors.white))),
         ),
       ),

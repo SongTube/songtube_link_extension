@@ -64,6 +64,7 @@ class _MainState extends State<Main> {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             const ExtensionAppBar(),
