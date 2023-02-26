@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:songtube_link_flutter/internal/app_connection.dart';
 import 'package:songtube_link_flutter/internal/shared_preferences.dart';
@@ -91,7 +92,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       child: device != null
-        ? VideoDetails(link: 'https://www.youtube.com/watch?v=gzY8VH7eb8Y')
+        ? VideoDetails(link: kDebugMode ? 'https://www.youtube.com/watch?v=Zn-_1m4OMjU' : currentUrl)
         : Text('No device connected', textAlign: TextAlign.center, style: textStyle(context, opacity: 0.6, bold: false)),
     );
   }
