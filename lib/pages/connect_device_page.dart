@@ -76,7 +76,9 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
             if (connectToDeviceRunning)
             const Padding(
               padding: EdgeInsets.only(right: 8),
-              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(appColor)),
+              child: SizedBox(
+                width: 24, height: 24,
+                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(appColor))),
             ),
             _connectButton()
           ],
