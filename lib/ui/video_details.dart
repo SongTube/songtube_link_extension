@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:songtube_link_flutter/internal/app_connection.dart';
 import 'package:songtube_link_flutter/internal/models/video.dart';
+import 'package:songtube_link_flutter/internal/shared_preferences.dart';
 import 'package:songtube_link_flutter/internal/styles.dart';
 import 'package:songtube_link_flutter/internal/utils.dart';
 
@@ -46,7 +47,7 @@ class _VideoDetailsState extends State<VideoDetails> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: 120,
+            height: 130,
             child: AspectRatio(
               aspectRatio: 16/9,
               child: ClipRRect(
@@ -64,8 +65,8 @@ class _VideoDetailsState extends State<VideoDetails> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(video.name, style: subtitleTextStyle(context, bold: true), maxLines: 2),
-                Text(video.author, style: subtitleTextStyle(context, opacity: 0.6)),
+                Text(video.name, style: subtitleTextStyle(context, bold: true), maxLines: 1),
+                Text(video.author, style: subtitleTextStyle(context, opacity: 0.6), maxLines: 1),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -81,7 +82,7 @@ class _VideoDetailsState extends State<VideoDetails> {
                     }),
                     const SizedBox(width: 8),
                     // View on Device
-                    _button(title: 'Download', onTap: () async {
+                    _button(title: 'Instant Download', onTap: () async {
                       final status = await AppConnection.sendLink(widget.link!, isDownload: true);
                       if (status) {
                         setState(() {
@@ -91,14 +92,43 @@ class _VideoDetailsState extends State<VideoDetails> {
                       print(status);
                     }),
                     const SizedBox(width: 8),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: linkSent
-                        ? const Icon(Icons.check, color: appColor)
-                        : const SizedBox(),
-                    )
+                    if (false)
+                    DropdownButton<String>(
+                      value: prefs.getString('instant_download_format') ?? 'AAC',
+                      iconSize: 18,
+                      borderRadius: BorderRadius.circular(5),
+                      iconEnabledColor: appColor,
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.6),
+                        fontFamily: 'Product Sans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12
+                      ),
+                      underline: Container(),
+                      items: const [
+                        DropdownMenuItem(
+                          value: "AAC",
+                          child: Text("AAC"),
+                        ),
+                        DropdownMenuItem(
+                          value: "OGG",
+                          child: Text("OGG"),
+                        )
+                      ],
+                      onChanged: (String? value) async {
+                        if (value == "AAC") {
+                          await prefs.setString('instant_download_format', 'AAC');
+                          setState(() {});
+                        } else if (value == "OGG") {
+                          await prefs.setString('instant_download_format', 'OGG');
+                          setState(() {});
+                        }
+                      },
+                    ),
                   ],
-                )
+                ),
+                const SizedBox(height: 8),
+                Text('View or Download in the SongTube App\nDownload is audio only', style: tinyTextStyle(context, opacity: 0.6))
               ],
             ),
           )

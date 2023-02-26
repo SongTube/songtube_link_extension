@@ -45,7 +45,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
   void initState() {
     getUrl();
     if (device != null) {
-      final result = AppConnection.checkDevice().then((value) {
+      AppConnection.checkDevice().then((value) {
         if (!value) {
           device = null;
           setState(() {});
@@ -91,14 +91,14 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       child: device != null
-        ? VideoDetails(link: currentUrl)
+        ? VideoDetails(link: 'https://www.youtube.com/watch?v=gzY8VH7eb8Y')
         : Text('No device connected', textAlign: TextAlign.center, style: textStyle(context, opacity: 0.6, bold: false)),
     );
   }
 
   Widget _deviceConnectionStatus() {
     return Padding(
-      padding: const EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 8),
+      padding: const EdgeInsets.only(left: 12, right: 18, top: 8, bottom: 8),
       child: Row(
         children: [
           AnimatedSwitcher(
@@ -133,7 +133,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
           }
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 100),
           padding: const EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
@@ -150,7 +150,9 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
             duration: const Duration(milliseconds: 300),
             child: device != null
               ? Text('Disconnect', style: textStyle(context, bold: true).copyWith(color: appColor))
-              : Text('Search for device', style: textStyle(context, bold: true).copyWith(color: Colors.white))),
+              : connectToDeviceRunning
+                ? Text('Searching...', style: textStyle(context, bold: true).copyWith(color: Colors.white))
+                : Text('Search for device', style: textStyle(context, bold: true).copyWith(color: Colors.white))),
         ),
       ),
     );
