@@ -70,26 +70,24 @@ class _VideoDetailsState extends State<VideoDetails> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    // Download on Device
-                    _button(title: 'View', onTap: () async {
+                    // View on Device
+                    VideoDetailsButton(title: 'View', onTap: () async {
                       final status = await AppConnection.sendLink(widget.link!, isDownload: false);
                       if (status) {
                         setState(() {
                           linkSent = true;
                         });
                       }
-                      print(status);
                     }),
                     const SizedBox(width: 8),
-                    // View on Device
-                    _button(title: 'Instant Download', onTap: () async {
+                    // Instantly Download on Device
+                    VideoDetailsButton(title: 'Instant Download', onTap: () async {
                       final status = await AppConnection.sendLink(widget.link!, isDownload: true);
                       if (status) {
                         setState(() {
                           linkSent = true;
                         });
                       }
-                      print(status);
                     }),
                     const SizedBox(width: 8),
                     if (false)
@@ -141,13 +139,43 @@ class _VideoDetailsState extends State<VideoDetails> {
     return Text('No content detected\nOpen a Video or Playlist and check again', style: textStyle(context, opacity: 0.6, bold: false), textAlign: TextAlign.center,);
   }
 
-  Widget _button({required String title, required Function() onTap}) {
+}
+
+class VideoDetailsButton extends StatefulWidget {
+  const VideoDetailsButton({
+    required this.title,
+    required this.onTap,
+    super.key});
+  final String title;
+  final Function() onTap;
+  @override
+  State<VideoDetailsButton> createState() => _VideoDetailsButtonState();
+}
+
+class _VideoDetailsButtonState extends State<VideoDetailsButton> {
+
+  // Pressed status
+  bool pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
-      child: Container(
+      onTap: pressed ? () {} : () {
+        setState(() {
+          pressed = true;
+        });
+        widget.onTap();
+        Future.delayed(const Duration(seconds: 5), () {
+          setState(() {
+            pressed = false;
+          });
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
         decoration: BoxDecoration(
-          color: appColor,
+          color: pressed ? Colors.grey : appColor,
           borderRadius: BorderRadius.circular(5),
           boxShadow: [
             BoxShadow(
@@ -157,9 +185,8 @@ class _VideoDetailsState extends State<VideoDetails> {
             )
           ]
         ),
-        child: Text(title, style: subtitleTextStyle(context).copyWith(color: Colors.white)),
+        child: Text(widget.title, style: subtitleTextStyle(context).copyWith(color: Colors.white)),
       ),
     );
   }
-
 }
