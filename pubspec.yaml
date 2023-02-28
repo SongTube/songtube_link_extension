@@ -35,6 +35,7 @@ dependencies:
   shared_preferences: any
   google_fonts: any
   url_launcher: ^6.1.10
+  js: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

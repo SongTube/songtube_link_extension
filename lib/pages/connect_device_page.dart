@@ -1,10 +1,12 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:js' as js;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:songtube_link_flutter/internal/app_connection.dart';
 import 'package:songtube_link_flutter/internal/shared_preferences.dart';
 import 'package:songtube_link_flutter/internal/styles.dart';
-import 'dart:js' as js;
-
 import 'package:songtube_link_flutter/ui/video_details.dart';
 
 class ConnectDevicePage extends StatefulWidget {

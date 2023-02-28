@@ -1,10 +1,17 @@
+@JS()
+library t;
+
+import 'package:js/js.dart';
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:songtube_link_flutter/internal/styles.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
+@JS()
+external void download();
 
 class ConnectDesktopPage extends StatefulWidget {
   const ConnectDesktopPage({super.key});
@@ -14,6 +21,7 @@ class ConnectDesktopPage extends StatefulWidget {
 }
 
 class _ConnectDesktopPageState extends State<ConnectDesktopPage> {
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -53,7 +61,7 @@ class _ConnectDesktopPageState extends State<ConnectDesktopPage> {
         final windows = assets.firstWhere((element) => element['name'] == 'installer_windows.exe');
         // final linux = assets.firstWhere((element) => element['name'] == 'linux_snap_bundle.zip');
         final link = windows['browser_download_url'];
-        launchUrl(Uri.parse(link));
+        download();
       },
       child: Container(
         padding: const EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 8),
