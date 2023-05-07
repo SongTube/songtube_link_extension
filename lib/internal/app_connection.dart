@@ -42,9 +42,9 @@ class AppConnection {
   }
 
   // Check if the connection to device is alive
-  static Future<bool> checkDevice() async {
+  static Future<bool> checkDevice({Device? deviceOverride}) async {
     try {
-      final response = await http.get(Uri.parse('${device!.uri.toString()}/ping'));
+      final response = await http.get(Uri.parse('${(deviceOverride ?? device)!.uri.toString()}/ping'));
       return response.body == 'pong';
     } catch (_) {
       return false;

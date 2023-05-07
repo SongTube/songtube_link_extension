@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:songtube_link_flutter/internal/app_connection.dart';
+import 'package:songtube_link_flutter/internal/models/device.dart';
 import 'package:songtube_link_flutter/internal/shared_preferences.dart';
 import 'package:songtube_link_flutter/internal/styles.dart';
 import 'package:songtube_link_flutter/ui/video_details.dart';
@@ -23,6 +24,9 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
   // Connection Running Status
   bool connectToDeviceRunning = false;
 
+  // Controller
+  TextEditingController controller = TextEditingController(text: prefs.getString('lastSavedIp'));
+
   void getUrl() {
     var queryInfo = js.JsObject.jsify({'active': true, 'currentWindow': true});
     js.context['chrome']['tabs']?.callMethod('query', [
@@ -39,6 +43,30 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
       connectToDeviceRunning = true;
     });
     device = await AppConnection.searchForDevice();
+    setState(() {
+      connectToDeviceRunning = false;
+    });
+  }
+
+  void manualConnect() async {
+    if (connectToDeviceRunning) {
+      return;
+    }
+    setState(() {
+      connectToDeviceRunning = true;
+    });
+    final model = Device(name: 'Android Phone', uri: Uri.parse('http://${controller.text}:1458'));
+    final result = await AppConnection.checkDevice(deviceOverride: model);
+    if (result) {
+      prefs.setString('lastSavedIp', controller.text);
+      setState(() {
+        device = model;
+      });
+    } else {
+      setState(() {
+        device = null;
+      });
+    }
     setState(() {
       connectToDeviceRunning = false;
     });
@@ -82,6 +110,33 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
               child: SizedBox(
                 width: 16, height: 16,
                 child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(appColor), strokeWidth: 3)),
+            ),
+            if (device == null)
+            // IP Box
+            Flexible(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: 'Device address...',
+                    labelText: 'Manual connection',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    labelStyle: smallTextStyle(context),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        manualConnect();
+                      },
+                      icon: Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor, size: 18),
+                    )
+                  ),
+                  style: subtitleTextStyle(context),
+                  onSubmitted: (_) {
+                    manualConnect();
+                  },
+                ),
+              ),
             ),
             _connectButton()
           ],
