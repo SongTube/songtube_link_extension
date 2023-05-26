@@ -187,7 +187,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
       duration: const Duration(milliseconds: 300),
       child: InkWell(
         onTap: () async {
-          if (connected) {
+          if (connected || device != null) {
             if (device != null) {
               device = null;
               setState(() {});
@@ -216,7 +216,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
           ),
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: connected ? device != null
+            child: (connected || device != null) ? device != null
               ? Text('Disconnect', style: textStyle(context, bold: true).copyWith(color: appColor))
               : connectToDeviceRunning
                 ? Text('Searching...', style: textStyle(context, bold: true).copyWith(color: Colors.white))
