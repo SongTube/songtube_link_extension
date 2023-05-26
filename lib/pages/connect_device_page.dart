@@ -1,14 +1,20 @@
 // ignore: avoid_web_libraries_in_flutter
+import 'dart:convert';
 import 'dart:js' as js;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:js/js.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:songtube_link_flutter/internal/app_connection.dart';
 import 'package:songtube_link_flutter/internal/models/device.dart';
 import 'package:songtube_link_flutter/internal/shared_preferences.dart';
 import 'package:songtube_link_flutter/internal/styles.dart';
 import 'package:songtube_link_flutter/ui/video_details.dart';
+
+@JS()
+external void download();
 
 class ConnectDevicePage extends StatefulWidget {
   const ConnectDevicePage({super.key});
@@ -150,7 +156,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
       duration: const Duration(milliseconds: 300),
       child: device != null
         ? VideoDetails(link: kDebugMode ? 'https://www.youtube.com/watch?v=Zn-_1m4OMjU' : currentUrl)
-        : Text('No device connected', textAlign: TextAlign.center, style: textStyle(context, opacity: 0.6, bold: false)),
+        : Text('No device connected${connected ? '' : '\nDownload SongTube Link Server for auto-detect'}', textAlign: TextAlign.center, style: textStyle(context, opacity: 0.6, bold: false)),
     );
   }
 
@@ -180,14 +186,18 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       child: InkWell(
-        onTap: () {
-          if (device != null) {
-            device = null;
-            setState(() {});
-          } else {
-            if (!connectToDeviceRunning) {
-              connectToDevice();
+        onTap: () async {
+          if (connected) {
+            if (device != null) {
+              device = null;
+              setState(() {});
+            } else {
+              if (!connectToDeviceRunning) {
+                connectToDevice();
+              }
             }
+          } else {
+            download();
           }
         },
         child: AnimatedContainer(
@@ -206,11 +216,13 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
           ),
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: device != null
+            child: connected ? device != null
               ? Text('Disconnect', style: textStyle(context, bold: true).copyWith(color: appColor))
               : connectToDeviceRunning
                 ? Text('Searching...', style: textStyle(context, bold: true).copyWith(color: Colors.white))
-                : Text('Search for device', style: textStyle(context, bold: true).copyWith(color: Colors.white))),
+                : Text('Search for device', style: textStyle(context, bold: true).copyWith(color: Colors.white))
+              : Text('Download', style: textStyle(context, bold: true).copyWith(color: Colors.white))
+          ),
         ),
       ),
     );

@@ -66,11 +66,9 @@ class _MainState extends State<Main> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Column(
-          children: [
-            const ExtensionAppBar(),
-            Expanded(child: connected
-              ? const ConnectDevicePage()
-              : const ConnectDesktopPage())
+          children: const [
+            ExtensionAppBar(),
+            Expanded(child: ConnectDevicePage())
           ],
         )
       ),
